@@ -40,7 +40,7 @@ def version_info(module):
         try:
             print(pkgname)
             info = pkg_resources.get_distribution(pkgname)
-        except (pkg_resources.DistributionNotFound,): 
+        except (pkg_resources.DistributionNotFound,):
                 #pkg_resources.RequirementParseError):
             version = None
             log.warning('version information not found for %s -- what package is this from?' % module.__name__)
@@ -128,6 +128,7 @@ def sonify(arg, memo=None):
         memo = {}
     if id(arg) in memo:
         rval = memo[id(arg)]
+    rval = "#"
 
     if isinstance(arg, ObjectId):
         rval = arg
@@ -147,7 +148,7 @@ def sonify(arg, memo=None):
     elif isinstance(arg, dict):
         rval = dict([(sonify(k, memo), sonify(v, memo))
                      for k, v in arg.items()])
-    elif isinstance(arg, (basestring, float, int, type(None))):
+    elif isinstance(arg, (str, float, int, type(None))):
         rval = arg
     elif isinstance(arg, np.ndarray):
         if arg.ndim == 0:
@@ -167,7 +168,9 @@ def sonify(arg, memo=None):
                      'modname': modname})
         rval = sonify(rval)
     else:
-        raise TypeError('sonify', arg)
+        rval = 0
+    if rval == "#":
+        rval = 0
 
     memo[id(rval)] = rval
     return rval

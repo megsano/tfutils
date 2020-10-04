@@ -9,7 +9,7 @@ import json
 import copy
 import logging
 import tarfile
-import cPickle
+import pickle
 import threading
 from collections import OrderedDict
 
@@ -153,7 +153,7 @@ class DBInterface(object):
                         mongodb query describing how to load from loading database
                     - load_param_dict (dict)
                         A dictionary whose keys are the names of the variables that are to be loaded
-                        from the checkpoint, and the values are the names of the variables of the model 
+                        from the checkpoint, and the values are the names of the variables of the model
                         that you want to restore with the value of the corresponding checkpoint variable.
             - sess (tensorflow.Session)
                 Object in which to run calculations.  This is required if actual loading/
@@ -221,9 +221,9 @@ class DBInterface(object):
         if load_query is None:
             load_query = {}
         else:
-            if self.sameloc: 
+            if self.sameloc:
                 raise Exception('Loading pointlessly')
-                
+
         if 'exp_id' not in load_query:
             load_query.update({'exp_id': self.load_exp_id})
 
@@ -300,11 +300,11 @@ class DBInterface(object):
                         for var in all_variables:
                             if var.name.split(':')[0] == value:
                                load_var_dict[key] = var
-                               break 
+                               break
                     restore_vars = list(load_var_dict.values())
                     restore_vars_names = list(load_var_dict.keys())
                     log.info('Restored Vars:\n'+str([restore_var.name for restore_var in restore_vars])+'\n'+str(len(restore_vars)))
-                    tf_saver_restore = tf.train.Saver(load_var_dict) 
+                    tf_saver_restore = tf.train.Saver(load_var_dict)
                 # tensorflow restore
                 log.info('Restoring variables from record %s (step %d)...' % (str(rec['_id']), rec['step']))
                 tf_saver_restore.restore(self.sess, cache_filename)
@@ -398,7 +398,7 @@ class DBInterface(object):
         else:
             ckpt_record = None
 
-        try: 
+        try:
             count_recent = collfs_recent.find(query).count()
         except Exception as inst:
             raise er.OperationFailure(inst.args[0] + "\n Is your dbname too long? Mongo requires that dbnames be no longer than 64 characters.")
@@ -601,7 +601,7 @@ class DBInterface(object):
         if save_to_gfs:
             idval = str(outrec)
             save_to_gfs_path = idval + "_fileitems"
-            self.collfs.put(cPickle.dumps(save_to_gfs), filename=save_to_gfs_path, item_for=outrec)
+            self.collfs.put(pickle.dumps(save_to_gfs), filename=save_to_gfs_path, item_for=outrec)
 
         sys.stdout.flush()  # flush the stdout buffer
         self.outrecs.append(outrec)

@@ -4,7 +4,7 @@ import os
 import functools
 import itertools
 import copy
-import cPickle
+import pickle
 import logging
 import threading
 
@@ -266,7 +266,7 @@ def parse_standard_tfmeta(paths):
             mpaths = path
         d = {}
         for mpath in mpaths:
-            d.update(cPickle.load(open(mpath)))
+            d.update(pickle.load(open(mpath)))
         meta_list.append(d)
     return meta_list
 
