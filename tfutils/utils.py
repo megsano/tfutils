@@ -109,7 +109,7 @@ def git_info(repo):
 def make_mongo_safe(_d):
     """Makes a json-izable actually safe for insertion into Mongo.
     """
-    klist = _d.keys()[:]
+    klist = list(_d.keys())[:]
     for _k in klist:
         if hasattr(_d[_k], 'keys'):
             make_mongo_safe(_d[_k])
